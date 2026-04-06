@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: emergent-postgres
+    environment:
+      POSTGRES_DB: emergent
+      POSTGRES_USER: emergent
+      POSTGRES_PASSWORD: emergent
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U emergent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - emergent
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: emergent-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - emergent
+
+  # MinIO S3 Storage
+  minio:
+    image: minio/minio:latest
+    container_name: emergent-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/minio_root
+    command: server /minio_root --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - emergent
+
+  # NestJS Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: emergent-backend
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://emergent:emergent@postgres:5432/emergent
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      JWT_EXPIRATION: 24h
+      JWT_REFRESH_SECRET: your-super-secret-refresh-key
+      JWT_REFRESH_EXPIRATION: 7d
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: emergent-files
+      MINIO_USE_SSL: 'false'
+      PORT: 3001
+      CORS_ORIGIN: http://localhost:3000,http://localhost:5173
+      LOG_LEVEL: info
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+    networks:
+      - emergent
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: emergent-frontend
+    environment:
+      VITE_API_URL: http://localhost:3001/api
+      VITE_WS_URL: ws://localhost:3001
+    ports:
+      - "3000:3000"
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    networks:
+      - emergent
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: emergent-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./infra/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - emergent
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+networks:
+  emergent:
+    driver: bridge

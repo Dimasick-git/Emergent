@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply border-border;
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-feature-settings: "rounding" 1;
+}
+
+button {
+  @apply transition-colors;
+}
+
+a {
+  @apply text-primary hover:underline;
+}
+
+code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+pre {
+  @apply bg-muted p-4 rounded-lg overflow-auto;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground rounded-full hover:bg-primary;
+}

@@ -1,0 +1,45 @@
+{
+  "name": "emergent",
+  "version": "0.1.0",
+  "description": "Private messenger for developers with workspaces, real-time WebSocket, markdown support, and secure authentication",
+  "private": true,
+  "main": "dist/index.js",
+  "type": "module",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "mobile",
+    "sdk/ts",
+    "sdk/python",
+    "sdk/go",
+    "cli"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w backend && npm run build -w frontend && npm run build -w cli && npm run build -w mobile",
+    "test": "npm run test -w backend && npm run test -w frontend",
+    "lint": "npm run lint -w backend && npm run lint -w frontend && npm run lint -w cli",
+    "format": "npm run format -w backend && npm run format -w frontend && npm run format -w cli",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "clean": "rm -rf node_modules dist && npm run clean -w backend && npm run clean -w frontend && npm run clean -w cli && npm run clean -w mobile"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "messenger",
+    "chat",
+    "websocket",
+    "real-time",
+    "developers"
+  ],
+  "author": "Emergent Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dimasick-git/Emergent.git"
+  }
+}
