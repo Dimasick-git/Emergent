@@ -1,0 +1,38 @@
+{
+  "name": "emergent-mobile",
+  "version": "0.1.0",
+  "description": "Emergent - Mobile Chat Application with React Native",
+  "type": "module",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest",
+    "lint": "eslint .",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-native": "^0.73.0",
+    "expo": "^50.0.0",
+    "expo-router": "^2.0.0",
+    "expo-status-bar": "^1.11.1",
+    "expo-socket-io": "^1.0.0",
+    "@react-native-async-storage/async-storage": "^1.21.0",
+    "axios": "^1.6.0",
+    "zustand": "^4.4.0",
+    "react-native-screens": "^3.27.0",
+    "react-native-safe-area-context": "^4.7.2",
+    "expo-font": "^11.6.0",
+    "react-native-gesture-handler": "^2.14.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.73.0",
+    "typescript": "^5.3.0",
+    "eslint": "^8.55.0",
+    "jest": "^29.7.0"
+  }
+}
