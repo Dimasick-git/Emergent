@@ -108,6 +108,13 @@ docker-compose up --build
 - **Zustand** - State management
 - **Socket.IO Client** - Real-time client
 
+### Mobile
+- **React Native** - Cross-platform mobile framework
+- **Expo** - Development & deployment platform
+- **Expo Router** - File-based routing for React Native
+- **Zustand** - State management
+- **Axios** - HTTP client
+
 ### Infrastructure
 - **Docker** - Containerization
 - **Docker Compose** - Service orchestration
@@ -129,8 +136,27 @@ cd backend && npm run dev
 # Frontend (with hot reload)
 cd frontend && npm run dev
 
-# Both simultaneously
+# Mobile App (with Expo)
+cd mobile && npm start
+
+# Both backend & frontend simultaneously
 npm run dev
+```
+
+### Running Mobile App
+
+```bash
+# Start Expo dev server
+cd mobile && npm start
+
+# Run on iOS emulator
+npm run ios
+
+# Run on Android emulator
+npm run android
+
+# Run in web browser
+npm run web
 ```
 
 ### Testing
@@ -213,7 +239,7 @@ See [Contributing Guidelines](./docs/contributing.md) for more details.
 |-----------|--------|---------|
 | Backend | ✅ Complete | 0.1.0 |
 | Frontend | ✅ Complete | 0.1.0 |
-| Mobile | 🟡 Planned | - |
+| Mobile | ✅ Complete | 0.1.0 |
 | SDKs | ✅ Complete | 0.1.0 |
 | CLI | ✅ Complete | 0.1.0 |
 | Docs | ✅ Complete | 0.1.0 |
